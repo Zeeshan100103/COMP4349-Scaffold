@@ -64,7 +64,7 @@ def generate_image_caption(image_bytes):
         resp = model.generate_content(
             [
                 {"mime_type": "image/jpeg", "data": encoded},
-                "Caption this image.",
+                "Provide detail single para caption this image.",
             ]
         )
         return resp.text or "No caption generated."
