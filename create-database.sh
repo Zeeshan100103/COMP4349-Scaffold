@@ -3,14 +3,14 @@
 # Database Creation Script for the Image Captioning App
 #-------------------------------------------------------------------------------
 
-DB_HOST="imageapp-db.ckaduid0n0l9.us-east-1.rds.amazonaws.com"
+DB_HOST="imageapp-database.cjoyv3exlbpo.us-east-1.rds.amazonaws.com"
 DB_USER="admin"
-DB_PASSWORD="alphabetagamma"
+DB_PASSWORD="samplepassword"
 
 SQL=$(cat <<'EOF'
-DROP DATABASE IF EXISTS imageappdb;
-CREATE DATABASE imageappdb;
-USE imageappdb;
+DROP DATABASE IF EXISTS imageappdatabase;
+CREATE DATABASE imageappdatabase;
+USE imageappdatabase;
 CREATE TABLE captions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     image_key VARCHAR(255) NOT NULL,

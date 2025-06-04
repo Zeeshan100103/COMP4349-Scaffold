@@ -33,7 +33,7 @@ S3_BUCKET = "image-app-bucket-57896453645245646"
 S3_REGION = "us-east-1"
 
 # RDS / MySQL
-DB_HOST     = "imageapp-db.ckaduid0n0l9.us-east-1.rds.amazonaws.com" # To change
+DB_HOST     = "imageapp-database.cjoyv3exlbpo.us-east-1.rds.amazonaws.com" # To change
 DB_NAME     = "imageappdatabase"
 DB_USER     = "admin"
 DB_PASSWORD = "samplepassword"
