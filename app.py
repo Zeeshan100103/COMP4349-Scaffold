@@ -24,19 +24,19 @@ from werkzeug.utils import secure_filename
 # ── CONFIGURATION ───────────────────────────────────────────────────────────────
 
 # Gemini API
-GOOGLE_API_KEY = "AIzaSyD7_nrNfq4noFX2CWO-Bg5ZtTtedhohwNw"
+GOOGLE_API_KEY = "AIzaSyB4Hd7FY2Qa0AfhqjES-DporZV2S6QHV8s"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-2.5-flash-preview-04-17")
 
 # AWS / S3
-S3_BUCKET = "image-app-bucket-096340956834506"
+S3_BUCKET = "image-app-bucket-57896453645245646"
 S3_REGION = "us-east-1"
 
 # RDS / MySQL
-DB_HOST     = "imageapp-db.ckaduid0n0l9.us-east-1.rds.amazonaws.com"
-DB_NAME     = "imageappdb"
+DB_HOST     = "imageapp-db.ckaduid0n0l9.us-east-1.rds.amazonaws.com" # To change
+DB_NAME     = "imageappdatabase"
 DB_USER     = "admin"
-DB_PASSWORD = "alphabetagamma"
+DB_PASSWORD = "samplepassword"
 
 # File uploads
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
