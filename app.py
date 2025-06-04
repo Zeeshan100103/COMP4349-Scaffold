@@ -85,43 +85,54 @@ def upload_form():
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_image():
+    """
+    Handles image upload:
+    1. Validates the file.
+    2. Uploads the image to S3 under 'uploads/'.
+    3. Immediately returns a response indicating that the caption is pending.
+       The Annotation Lambda will run asynchronously to generate and store the caption.
+    """
     if request.method == "POST":
         file = request.files.get("file")
         if not file or file.filename == "" or not allowed_file(file.filename):
             return render_template("upload.html", error="Please select a valid image file.")
+
+        # Secure the filename and read its bytes
         filename = secure_filename(file.filename)
         data = file.read()
         upload_key = f"uploads/{filename}"
 
-        # 1. Upload to S3
+        # 1. Upload to S3 under the 'uploads/' prefix
         try:
             get_s3_client().upload_fileobj(BytesIO(data), S3_BUCKET, upload_key)
         except Exception as e:
             return render_template("upload.html", error=f"S3 error: {e}")
 
-        # 2. Generate caption
-        caption = generate_image_caption(data)
-
-        # 3. Save to RDS
+        # 2. We no longer generate the caption here (Annotation Lambda handles it).
+        #    Instead, immediately store a placeholder or skip DB write. The Lambda will insert later.
         conn = get_db_connection()
         if not conn:
             return render_template("upload.html", error="Database connection failed.")
         cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO captions (image_key, caption) VALUES (%s, %s)",
-            (filename, caption)
-        )
+        # We comment out the synchronous DB insert; Annotation Lambda will insert:
+        # cur.execute(
+        #     "INSERT INTO captions (image_key, caption) VALUES (%s, %s)",
+        #     (filename, "(Caption pending…)"),
+        # )
         conn.commit()
         conn.close()
 
-        # 4. Prepare for display
+        # 3. Prepare for display: show the uploaded image and a placeholder caption
         img_b64 = base64.b64encode(data).decode("utf-8")
-        file_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{filename}"
-        return render_template("upload.html",
-                               image_data=img_b64,
-                               file_url=file_url,
-                               caption=caption)
+        file_url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/uploads/{filename}"
+        return render_template(
+            "upload.html",
+            image_data=img_b64,
+            file_url=file_url,
+            caption="Caption available in the Gallery now!"
+        )
 
+    # If GET request, simply render the upload form (no pre-filled variables)
     return render_template("upload.html")
 
 @app.route("/gallery")
